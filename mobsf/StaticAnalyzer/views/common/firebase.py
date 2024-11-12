@@ -68,11 +68,17 @@ def firebase_analysis(checksum, code_an_dic):
         returl, is_open = open_firebase(checksum, url)
         if is_open:
             item = FIREBASE_FINDINGS['firebase_db_open']
-            item['description'] = item['description'] % returl
+            try:
+                item['description'] = item['description'] % returl
+            except:
+                logger.exception(f"Failed to concatenate strings")
             findings.append(item)
         else:
             item = FIREBASE_FINDINGS['firebase_db_exists']
-            item['description'] = item['description'] % returl
+            try:
+                item['description'] = item['description'] % returl
+            except:
+                logger.exception(f"Failed to concatenate strings")
             findings.append(item)
     # Check for Firebase Remote Config
     firebase_creds = code_an_dic.get('firebase_creds')
@@ -153,11 +159,17 @@ def firebase_remote_config(checksum, creds):
             resp = response.json()
             if resp.get('state') == 'NO_TEMPLATE':
                 item = FIREBASE_FINDINGS['firebase_remote_config_disabled']
-                item['description'] = item['description'] % (url, resp)
+                try:
+                    item['description'] = item['description'] % (url, resp)
+                except:
+                    logger.exception(f"Failed to concatenate strings")
                 findings.append(item)
             else:
                 item = FIREBASE_FINDINGS['firebase_remote_config_enabled']
-                item['description'] = item['description'] % (url, resp)
+                try:
+                    item['description'] = item['description'] % (url, resp)
+                except:
+                    logger.exception(f"Failed to concatenate strings")
                 findings.append(item)
         else:
             item = FIREBASE_FINDINGS['firebase_remote_config_disabled']
